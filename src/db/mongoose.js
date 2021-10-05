@@ -1,5 +1,5 @@
 const mongoose = require("mongoose")
-const {Schema} = require("mongoose");
+
 
 const databaseName = "task-manager-api"
 const connectionUrl = "mongodb://localhost:27017" + "/" + databaseName
