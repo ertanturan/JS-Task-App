@@ -1,30 +1,29 @@
 const express = require("express")
 const {request, response} = require("express");
 const User = require("../models/user.js");
+const {use} = require("express/lib/router");
 const router = new express.Router()
 
+const auth = require("../middleware/auth.js")
 
 router.post("/users", async (request, response) => {
 
-    const user = new User(request.body)
-
     try {
+        const user = new User(request.body)
         await user.save()
-        response.status(201).send("Successfully created new user !")
+
+        const token = await user.generateAuthToken()
+
+        response.status(201).send({user, token})
     } catch (error) {
         response.status(400).send(error)
     }
 
 })
 
-router.get("/users", async (request, response) => {
+router.get("/users/me", auth, async (request, response) => {
 
-    try {
-        const users = await User.find({})
-        response.send(users)
-    } catch (error) {
-        response.status(500).send()
-    }
+    response.send(request.user)
 
 })
 
@@ -63,8 +62,13 @@ router.patch("/users/:id", async (request, response) => {
 
     try {
 
-        const user = await User.findByIdAndUpdate(request.params.id, request.body,
-            {new: true, runValidators: true})
+        const user = await User.findById(request.params.id)
+
+        updates.forEach((update) => user[update] = request.body[update])
+
+        await user.save()
+
+        // const user = await User.findByIdAndUpdate(request.params.id, request.body, {new: true, runValidators: true})
 
         if (!user) {
             console.log("not found")
@@ -96,5 +100,20 @@ router.delete("/users/:id", async (request, response) => {
         response.status(400).send("Bad Request !")
     }
 })
+
+
+router.post("/users/login", async (request, response) => {
+    try {
+
+        const user = await User.findByCredentials(request.body.email, request.body.password)
+        const token = await user.generateAuthToken()
+
+        response.send({user, token})
+    } catch (error) {
+        response.status(400).send(error)
+
+    }
+})
+
 
 module.exports = router
