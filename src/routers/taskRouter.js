@@ -73,14 +73,16 @@ router.patch("/tasks/:id", auth, async (request, response) => {
     }
 
     try {
-        const task = await Task.findById(request.params.id)
-        updates.forEach((update) => task[update] = request.body[update])
-
-        await task.save()
+        const task = await Task.find({_id:request.params.id,owner:request.user._id})
 
         if (!task) {
             return response.status(404).send("Task not found !")
         } else {
+
+            updates.forEach((update) => task[update] = request.body[update])
+
+            await task.save()
+
             response.send(task)
         }
     } catch (error) {
