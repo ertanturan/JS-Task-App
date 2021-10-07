@@ -27,30 +27,7 @@ router.get("/users/me", auth, async (request, response) => {
 
 })
 
-router.get("/users/:id", async (request, response) => {
-
-    if (request.params.id.length < 12) {
-        return response.status(400).send()
-    }
-
-    try {
-        const user = await User.findById(request.params.id)
-
-        if (!user) {
-            return response.status(404).send()
-        } else {
-            response.send(user)
-        }
-
-    } catch (error) {
-        response.status(500).send(error)
-    }
-
-})
-
-
-router.patch("/users/:id", async (request, response) => {
-    console.log("patch")
+router.patch("/users/me", auth,async (request, response) => {
 
     const updates = Object.keys(request.body)
     const allowedUpdates = ["name", "email", "password", "age"]
@@ -61,40 +38,24 @@ router.patch("/users/:id", async (request, response) => {
     }
 
     try {
+        updates.forEach((update) => request.user[update] = request.body[update])
+        await request.user.save()
 
-        const user = await User.findById(request.params.id)
-
-        updates.forEach((update) => user[update] = request.body[update])
-
-        await user.save()
-
-        // const user = await User.findByIdAndUpdate(request.params.id, request.body, {new: true, runValidators: true})
-
-        if (!user) {
-            console.log("not found")
+        if (!request.user) {
             response.status(404).send("No user found !")
         } else {
-            console.log("success")
             response.send("Successfully patched user !")
         }
     } catch (error) {
-        console.log("error")
-
-        response.status(400).send("Bad Request")
+        response.status(400).send(error.message)
     }
 
 })
 
-router.delete("/users/:id", async (request, response) => {
+router.delete("/users/me", auth, async (request, response) => {
     try {
-        const user = await User.findByIdAndDelete(request.params.id)
-
-        if (!user) {
-            response.status(400).send("User not found by the given id !")
-        } else {
-            console.log(user)
-            response.send("Successfully deleted user !")
-        }
+        await request.user.remove()
+        response.send(request.user)
 
     } catch (error) {
         response.status(400).send("Bad Request !")
@@ -108,12 +69,46 @@ router.post("/users/login", async (request, response) => {
         const user = await User.findByCredentials(request.body.email, request.body.password)
         const token = await user.generateAuthToken()
 
-        response.send({user, token})
+        // console.log(user.getPublicProfile())
+        response.send({user, token: token})
+
     } catch (error) {
-        response.status(400).send(error)
+        console.log(error)
+        response.status(400).send(error.message)
 
     }
 })
 
+router.post("/users/logout", auth, async (request, response) => {
+    try {
+        request.user.tokens = request.user.tokens.filter((token) => token.token !== request.token)
+
+        await request.user.save()
+
+        response.send()
+    } catch (error) {
+        console.log("ERROR !!!!!!!")
+        console.log(error)
+        response.status(500).send(error.message)
+    }
+})
+
+
+router.post("/users/logoutAll", auth, async (request, response) => {
+    try {
+        console.log("Logout all")
+        request.user.tokens = []
+        console.log("tokens removed")
+        await request.user.save()
+        console.log("awaited for user save")
+
+        response.send("Logged out from all devices !")
+    } catch (error) {
+        response.status(500).send(error.message)
+    }
+})
+
+
+// router.post()
 
 module.exports = router
