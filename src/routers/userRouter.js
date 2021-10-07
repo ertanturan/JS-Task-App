@@ -87,8 +87,6 @@ router.post("/users/logout", auth, async (request, response) => {
 
         response.send()
     } catch (error) {
-        console.log("ERROR !!!!!!!")
-        console.log(error)
         response.status(500).send(error.message)
     }
 })
@@ -96,11 +94,8 @@ router.post("/users/logout", auth, async (request, response) => {
 
 router.post("/users/logoutAll", auth, async (request, response) => {
     try {
-        console.log("Logout all")
         request.user.tokens = []
-        console.log("tokens removed")
         await request.user.save()
-        console.log("awaited for user save")
 
         response.send("Logged out from all devices !")
     } catch (error) {
@@ -108,7 +103,5 @@ router.post("/users/logoutAll", auth, async (request, response) => {
     }
 })
 
-
-// router.post()
 
 module.exports = router

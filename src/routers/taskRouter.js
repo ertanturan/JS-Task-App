@@ -1,15 +1,19 @@
 const express = require("express")
-const Task = require("../models/task.js");
 const router = new express.Router()
-const auth = require("../middleware/auth.js")
 
-router.post("/tasks", async (request, response) => {
+const Task = require("../models/task.js");
+const auth = require("../middleware/auth.js")
+const User = require("../models/user.js")
+
+router.post("/tasks", auth, async (request, response) => {
 
     try {
-        const task = new Task(request.body)
-
+        // const task = new Task(request.body)
+        const task = new Task({
+            ...request.body,
+            owner: request.user._id
+        })
         const tasks = await task.save()
-        console.log("successfully saved task ", tasks)
         response.status(201).send("successfully saved task !")
 
     } catch (error) {
@@ -19,13 +23,16 @@ router.post("/tasks", async (request, response) => {
 })
 
 
-router.get("/tasks", async (request, response) => {
+router.get("/tasks", auth, async (request, response) => {
 
     try {
-        console.log("entered")
-        const tasks = await Task.find({})
-        console.log(tasks)
-        response.send(tasks)
+        const tasks = await request.user.populate('virtualTasks')
+
+        if (tasks.length === 0) {
+            response.status(404).send("No task found for the user logged in !")
+        } else {
+            response.send(request.user.virtualTasks)
+        }
 
     } catch (error) {
         response.status(500).send(error)
@@ -33,12 +40,20 @@ router.get("/tasks", async (request, response) => {
 
 })
 
-router.get("/tasks/:id", async (request, response) => {
+router.get("/tasks/:id", auth, async (request, response) => {
 
 
     try {
-        const task = await Task.findById(request.params.id)
-        response.send(task)
+        const id = request.params.id
+
+        const task = await Task.findOne({_id: id, owner: request.user._id})
+
+        if (!task) {
+            response.status(404).send
+        } else {
+            response.send(task)
+        }
+
 
     } catch (error) {
         response.status(500).send()
@@ -47,7 +62,7 @@ router.get("/tasks/:id", async (request, response) => {
 })
 
 
-router.patch("/tasks/:id", async (request, response) => {
+router.patch("/tasks/:id", auth, async (request, response) => {
 
     const updates = Object.keys(request.body)
     const validUpdates = ["description", "isCompleted"]

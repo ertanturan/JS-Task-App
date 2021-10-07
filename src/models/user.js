@@ -2,7 +2,7 @@ const validator = require("validator")
 const mongoose = require("mongoose")
 const bcrypt = require("bcryptjs")
 const jsonwebtoken = require("jsonwebtoken")
-
+const modelConstants = require("../constants/modelConstants.js")
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -51,6 +51,12 @@ const userSchema = new mongoose.Schema({
 
 })
 
+userSchema.virtual('virtualTasks', {
+    ref: modelConstants.taskModelName,
+    localField: '_id',
+    foreignField: 'owner'
+})
+
 userSchema.methods.generateAuthToken = async function () {
     const user = this
     const token = jsonwebtoken.sign({_id: user.id.toString()}, "notasecret")
@@ -60,7 +66,7 @@ userSchema.methods.generateAuthToken = async function () {
     return token
 }
 
-userSchema.methods.toJSON =  function () {
+userSchema.methods.toJSON = function () {
     const user = this
     const userObject = user.toObject()
 
@@ -69,7 +75,6 @@ userSchema.methods.toJSON =  function () {
 
     return userObject
 }
-
 
 userSchema.statics.findByCredentials = async function (email, password) {
 
@@ -100,6 +105,6 @@ userSchema.pre("save", async function (next) {
 })
 
 
-const User = mongoose.model("user", userSchema)
+const User = mongoose.model(modelConstants.userModelName, userSchema)
 
 module.exports = User;
