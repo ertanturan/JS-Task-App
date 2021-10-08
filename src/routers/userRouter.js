@@ -1,22 +1,17 @@
 const express = require("express")
-const {request, response} = require("express");
-const User = require("../models/user.js");
-const {use} = require("express/lib/router");
-const router = new express.Router()
+const multer = require("multer")
 
+const User = require("../models/user.js");
+
+const router = new express.Router()
 const auth = require("../middleware/auth.js")
 
 router.post("/users", async (request, response) => {
 
     try {
-        console.log("here")
         const user = new User(request.body)
-        console.log("here1")
         await user.save()
-        console.log("here2")
         const token = await user.generateAuthToken()
-
-        console.log("here3")
 
         response.status(201).send({user, token})
     } catch (error) {
@@ -31,7 +26,7 @@ router.get("/users/me", auth, async (request, response) => {
 
 })
 
-router.patch("/users/me", auth,async (request, response) => {
+router.patch("/users/me", auth, async (request, response) => {
 
     const updates = Object.keys(request.body)
     const allowedUpdates = ["name", "email", "password", "age"]
@@ -107,5 +102,32 @@ router.post("/users/logoutAll", auth, async (request, response) => {
     }
 })
 
+const userUpload = multer({
+    dest: "uploads/images/avatar",
+    limits: {
+        fileSize: 1000000,
+    },
+    fileFilter(request, file, callback) {
+
+        const isValidFormat = file.originalname.match(/\.(jpg|jpeg|png)$/)
+
+        if (!isValidFormat) {
+            callback(new Error("Please upload a valid file for avatar !"), false)
+        } else {
+            callback(undefined, true)
+        }
+
+    }
+})
+
+router.post("/users/me/avatar", userUpload.single("avatar"), async (request, response) => {
+
+    try {
+        response.send("Successfully uploaded the avatar")
+    } catch (error) {
+        response.status(400).send(error.message)
+    }
+
+})
 
 module.exports = router

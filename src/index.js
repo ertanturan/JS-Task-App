@@ -8,20 +8,6 @@ const app = express()
 const port = process.env.PORT || 3000
 
 
-// const multer = require("multer")
-//
-// const upload = multer({
-//     dest: "/uploads"
-// })
-
-
-// app.post('/upload', upload.single('singleName'), (request, response) => {
-//
-//
-//
-//     response.send()
-// })
-
 
 app.use(express.json())
 app.use(UserRoutes)
