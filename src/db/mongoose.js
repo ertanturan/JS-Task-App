@@ -9,6 +9,8 @@ mongoose.connect(connectionUrl,
     }, (error) => {
         if (error) {
             console.log("Unable to connect !")
+        }else{
+            console.log("Connection successful to Database")
         }
     }
 )

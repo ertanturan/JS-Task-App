@@ -5,6 +5,7 @@ const User = require("../models/user.js");
 
 const router = new express.Router()
 const auth = require("../middleware/auth.js")
+const {request, response} = require("express");
 
 router.post("/users", async (request, response) => {
 
@@ -103,7 +104,6 @@ router.post("/users/logoutAll", auth, async (request, response) => {
 })
 
 const userUpload = multer({
-    dest: "uploads/images/avatar",
     limits: {
         fileSize: 1000000,
     },
@@ -112,7 +112,7 @@ const userUpload = multer({
         const isValidFormat = file.originalname.match(/\.(jpg|jpeg|png)$/)
 
         if (!isValidFormat) {
-            callback(new Error("Please upload a valid file for avatar !"), false)
+            callback(new Error("Please upload an image !"), false)
         } else {
             callback(undefined, true)
         }
@@ -120,14 +120,56 @@ const userUpload = multer({
     }
 })
 
-router.post("/users/me/avatar", userUpload.single("avatar"), async (request, response) => {
+
+const avatarPath = "/users/me/avatar"
+router.post(avatarPath,
+    auth,
+    userUpload.single("avatar"),
+    async (request, response) => {
+
+        try {
+            request.user.avatar = request.file.buffer
+            await request.user.save()
+            response.send()
+        } catch (error) {
+            response.status(500).send({error: error.message})
+        }
+
+
+    }, (error, request, response, next) => {
+        response.status(400).send({error: error.message})
+    }).delete(avatarPath, auth, async (request, response) => {
 
     try {
-        response.send("Successfully uploaded the avatar")
+        if (!request.user.avatar) {
+            response.status(404).send({error: "No avatar found !"})
+        } else {
+            request.user.avatar = undefined
+            await request.user.save()
+            response.send()
+        }
     } catch (error) {
-        response.status(400).send(error.message)
+        response.status(500).send({error: error.message})
     }
 
+
+})
+
+router.get("/users/me/avatar", auth,async (request, response) => {
+    try {
+
+
+        if (!request.user || !request.user.avatar) {
+            throw new Error("User or avatar not found !")
+        }else {
+            response.type("jpg")
+            response.send(request.user.avatar)
+        }
+
+
+    } catch (error) {
+        response.status(404).send({error: error.message})
+    }
 })
 
 module.exports = router
