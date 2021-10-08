@@ -2,7 +2,9 @@ const validator = require("validator")
 const mongoose = require("mongoose")
 const bcrypt = require("bcryptjs")
 const jsonwebtoken = require("jsonwebtoken")
+
 const modelConstants = require("../constants/modelConstants.js")
+
 
 const Task = require("../models/task.js")
 
@@ -51,6 +53,8 @@ const userSchema = new mongoose.Schema({
         }
     }]
 
+}, {
+    timestamps: true
 })
 
 userSchema.virtual('virtualTasks', {

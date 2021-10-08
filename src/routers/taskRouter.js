@@ -22,11 +22,32 @@ router.post("/tasks", auth, async (request, response) => {
 
 })
 
-
+//GET /tasks?completed=true
+//GET /tasks?limit=10&skip=0
 router.get("/tasks", auth, async (request, response) => {
 
+    const match = {}
+    const sort = {}
+    if (request.query.isCompleted) {
+        console.log("here ?")
+        match.isCompleted = request.query.isCompleted === 'true'
+    }
+
+    if (request.query.sortBy) {
+        const parts = request.query.sortBy.split(':')
+        sort[parts[0]] = parts[1] === 'desc' ? -1 : 1
+    }
+
     try {
-        const tasks = await request.user.populate('virtualTasks')
+        const tasks = await request.user.populate({
+            path: 'virtualTasks',
+            match: match,
+            options: {
+                limit: parseInt(request.query.limit),
+                skip: parseInt(request.query.skip),
+                sort: sort
+            }
+        })
 
         if (tasks.length === 0) {
             response.status(404).send("No task found for the user logged in !")
@@ -73,20 +94,18 @@ router.patch("/tasks/:id", auth, async (request, response) => {
     }
 
     try {
-        const task = await Task.find({_id:request.params.id,owner:request.user._id})
+        const task = await Task.findOne({_id: request.params.id, owner: request.user._id})
 
         if (!task) {
             return response.status(404).send("Task not found !")
         } else {
-
             updates.forEach((update) => task[update] = request.body[update])
 
             await task.save()
-
             response.send(task)
         }
     } catch (error) {
-        response.status(400).send("Bad Request !")
+        response.status(400).send("Bad Request !" + error.message)
     }
 
 })
