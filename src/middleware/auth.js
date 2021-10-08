@@ -8,6 +8,7 @@ const auth = async (request, response, next) => {
         const decoded = jwt.verify(token, "notasecret")
 
         const user = await User.findOne({_id: decoded._id, "tokens.token": token})
+
         if (user) {
             request.user = user
             request.token = token

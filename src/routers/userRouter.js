@@ -9,14 +9,18 @@ const auth = require("../middleware/auth.js")
 router.post("/users", async (request, response) => {
 
     try {
+        console.log("here")
         const user = new User(request.body)
+        console.log("here1")
         await user.save()
-
+        console.log("here2")
         const token = await user.generateAuthToken()
+
+        console.log("here3")
 
         response.status(201).send({user, token})
     } catch (error) {
-        response.status(400).send(error)
+        response.status(400).send(error.message)
     }
 
 })
