@@ -152,24 +152,21 @@ router.post(avatarPath,
         response.status(500).send({error: error.message})
     }
 
-
-})
-
-router.get("/users/me/avatar", auth,async (request, response) => {
+}).get(avatarPath, auth,async (request, response) => {
     try {
-
 
         if (!request.user || !request.user.avatar) {
             throw new Error("User or avatar not found !")
         }else {
+
             response.type("jpg")
             response.send(request.user.avatar)
         }
-
 
     } catch (error) {
         response.status(404).send({error: error.message})
     }
 })
+
 
 module.exports = router
