@@ -1,7 +1,6 @@
 {
   "name": "js-task-app",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
@@ -22,5 +21,14 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.13"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ertanturan/JS-Task-App.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ertanturan/JS-Task-App/issues"
+  },
+  "homepage": "https://github.com/ertanturan/JS-Task-App#readme",
+  "description": ""
 }
