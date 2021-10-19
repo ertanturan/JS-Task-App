@@ -2,7 +2,7 @@ const express = require("express")
 
 const TaskRouters = require("./routers/taskRouter.js")
 const UserRoutes = require("./routers/userRouter.js")
-const mongoose = require("../src/db/mongoose.js");
+require("../src/db/mongoose.js");
 
 
 const app = express()

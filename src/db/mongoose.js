@@ -1,14 +1,13 @@
 const mongoose = require("mongoose")
 
-const databaseName = "task-manager-api"
-const connectionUrl = "mongodb://localhost:27017" + "/" + databaseName
+const connectionUrl = process.env.DB_CONNECTION_URL + "/" + process.env.DB_NAME
 
 mongoose.connect(connectionUrl,
     {
         useNewUrlParser: true
     }, (error) => {
         if (error) {
-            console.log("Unable to connect !")
+            console.log("Unable to connect to the database!",error)
         }else{
             console.log("Connection successful to Database")
         }
