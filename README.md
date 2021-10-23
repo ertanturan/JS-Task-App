@@ -49,3 +49,13 @@ There's a simple middleware uses jwt(a npm tool) to create and verify tokens of 
 3. To make requests work which imported in the first step, you should assign the configured environment to each of them as seen in the screenshot below.
 ![Environment Selection](/GithubReferences/Postman/EnvironmentSelection.png)
 
+# IDE Configuration
+
+1. run the `npm install` command.
+2. Create a directory named `config` in the root directory
+3. Create files named `test.env` and `dev.env`
+4. Configure `.env` files as seen below
+   1. test.env
+   ![test.Env](/GithubReferences/IDE/TestEnv_Example.png)
+   2. dev.env
+   ![dev.env](/GithubReferences/IDE/DevEnvExample.png)    
