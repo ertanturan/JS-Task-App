@@ -17,13 +17,12 @@ This is a fundamental User/Task Server using REST API measures.
    * Gathers only non-private data (hides password, user avatar and tokens)
 - Patch User Info 
    * Updates only logged users' data.
-- Create User Avatar
+- Upload User Avatar
 - Fetch user avatar
    * Action can be done only to logged and authorized user's data.
 - Delete user avatar
    * Action can be done only to logged and authorized user's data.
-- Patch User Avatar
-   * Action can be done only to logged and authorized user's data.
+
 
 ## Task Features
 - Create Task
