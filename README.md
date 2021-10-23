@@ -4,10 +4,12 @@ This is a fundamental User/Task Server using REST API measures.
 
 # Features
 
-## User-Side
+## User Features
 
 - Create User
 - Delete User
+   * Sub -  Action can be done only to logged and authorized user's data.
+   * Deleting user triggers another action to remove all tasks created and assigned to the deleted user. 
 - Signup a New User
 - Read User 
    * Sub -  Gathers data only when authorized user logged in.
@@ -22,3 +24,15 @@ This is a fundamental User/Task Server using REST API measures.
    * Sub -  Action can be done only to logged and authorized user's data.
 - Patch User Avatar
    * Sub -  Action can be done only to logged and authorized user's data.
+
+## Task Features
+- Create Task
+   * Sub -  Action can be done only to logged and authorized user's task data.
+- Read Task
+   * Sub -  Action can be done only to logged and authorized user's task data.
+- Delete Task
+   * Sub -  Action can be done only to logged and authorized user's task data.
+- Patch Task
+   * Sub -  Action can be done only to logged and authorized user's task data.
+
+
