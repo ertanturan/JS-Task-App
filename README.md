@@ -37,3 +37,9 @@ This is a fundamental User/Task Server using REST API measures.
    * Action can be done only to logged and authorized user's task data.
 
 # Postman Configuration
+1. [This](/GithubReferences/Postman/Task%20App.postman_collection.json) json file should be imported to your postman dashboard as collection.
+2. Environment variables should be configured as seen in the screenshot below.
+![Environment Configuration](/GithubReferences/Postman/EnvironmentConfiguration.png)
+3. To make requests work which imported in the first step, you should assign the configured environment to each of them as seen in the screenshot below.
+![Environment Selection](/GithubReferences/Postman/EnvironmentSelection.png)
+
