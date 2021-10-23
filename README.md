@@ -33,5 +33,5 @@ This is a fundamental User/Task Server using REST API measures.
    * Action can be done only to logged and authorized user's task data.
 - Patch Task
    * Action can be done only to logged and authorized user's task data.
-
-
+- Fetch all Tasks.
+   * Action can be done only to logged and authorized user's task data.
