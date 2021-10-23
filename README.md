@@ -59,3 +59,23 @@ There's a simple middleware uses jwt(a npm tool) to create and verify tokens of 
    ![test.Env](/GithubReferences/IDE/TestEnv_Example.png)
    2. dev.env
    ![dev.env](/GithubReferences/IDE/DevEnvExample.png)    
+
+# Pre-Requisities
+MongoDB should be installed in your computer.
+
+# Running
+
+1. Start MongoDB to your designated data path (Do this to save your database to a known directory)
+2. To start once -> Run command `npm run start`
+3. To start again whenever a change in filesystem has been detected -> Run command `npm run dev`
+4. To run unit test -> Run command `npm run test`
+5. Your server is up !
+
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+
+# ENJOY !
