@@ -4,7 +4,7 @@ This is a fundamental User/Task Server using REST API measures.
 
 # Features
 
-## User Features
+## User-Wise
 
 - Create User
 - Delete User
@@ -24,7 +24,7 @@ This is a fundamental User/Task Server using REST API measures.
    * Action can be done only to logged and authorized user's data.
 
 
-## Task Features
+## Task-Wise
 - Create Task
    * Action can be done only to logged and authorized user's task data.
 - Read Task
@@ -35,6 +35,10 @@ This is a fundamental User/Task Server using REST API measures.
    * Action can be done only to logged and authorized user's task data.
 - Fetch all Tasks.
    * Action can be done only to logged and authorized user's task data.
+
+## Auth
+
+There's a simple middleware uses jwt(a npm tool) to create and verify tokens of users which helps to recognize if whom communicates with the server is a logged in user..
 
 # Postman Configuration
 1. [This](/GithubReferences/Postman/Task%20App.postman_collection.json) json file should be imported to your postman dashboard as collection. Expect a result as seen in the screenshot below.
