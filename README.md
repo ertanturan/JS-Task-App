@@ -37,4 +37,6 @@ This is a fundamental User/Task Server using REST API measures.
    * Action can be done only to logged and authorized user's task data.
 
 # Postman Configuration
-![Postman Collection to Import ](/GithubReferences/Postman/Task%20App.postman_collection.json)
+[Postman Collection to Import ](/GithubReferences/Postman/Task%20App.postman_collection.json)
+
+
